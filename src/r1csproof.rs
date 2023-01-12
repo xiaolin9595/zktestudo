@@ -363,7 +363,7 @@ impl R1CSProof {
     input: &[Scalar],
     evals: &(Scalar, Scalar, Scalar),
     transcript: &mut PoseidonTranscript,
-    gens: &R1CSGens,
+    _gens: &R1CSGens,
   ) -> Result<usize, ProofVerifyError> {
     self.comm.append_to_poseidon(transcript);
 

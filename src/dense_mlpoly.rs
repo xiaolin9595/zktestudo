@@ -1,5 +1,5 @@
 #![allow(clippy::too_many_arguments)]
-use crate::group::Fr;
+
 use crate::poseidon_transcript::{AppendToPoseidon, PoseidonTranscript};
 
 use super::commitments::{Commitments, MultiCommitGens};
@@ -15,16 +15,13 @@ use super::scalar::Scalar;
 use super::transcript::{AppendToTranscript, ProofTranscript};
 use ark_bls12_377::Bls12_377 as I;
 use ark_ff::{One, UniformRand, Zero};
-use ark_poly::{DenseMultilinearExtension, MultilinearExtension};
-use ark_poly_commit::multilinear_pc::data_structures::{
-  CommitterKey, UniversalParams, VerifierKey,
-};
+use ark_poly::MultilinearExtension;
+use ark_poly_commit::multilinear_pc::data_structures::{CommitterKey, VerifierKey};
 use ark_poly_commit::multilinear_pc::MultilinearPC;
 use ark_serialize::*;
 use core::ops::Index;
 use merlin::Transcript;
 use std::ops::{Add, AddAssign, Neg, Sub, SubAssign};
-use std::process::abort;
 
 #[cfg(feature = "multicore")]
 use rayon::prelude::*;
@@ -59,11 +56,11 @@ impl MultilinearExtension<Scalar> for DensePolynomial {
     }
   }
 
-  fn relabel(&self, a: usize, b: usize, k: usize) -> Self {
+  fn relabel(&self, _a: usize, _b: usize, _k: usize) -> Self {
     unimplemented!()
   }
 
-  fn fix_variables(&self, partial_point: &[Scalar]) -> Self {
+  fn fix_variables(&self, _partial_point: &[Scalar]) -> Self {
     unimplemented!()
   }
 
