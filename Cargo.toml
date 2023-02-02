@@ -1,7 +1,7 @@
 [package]
 name = "testudo"
 version = "0.1.0"
-authors = ["Protocol Labs <mara.mihali@protocol.ai>"]
+authors = ["Mara Mihali <mara.mihali@protocol.ai>","Srinath Setty <srinath@microsoft.com>" ]
 edition = "2021"
 description = "Spartan + Groth16 fast prover fast verifier SNARK"
 readme = "README.md"
