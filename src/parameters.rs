@@ -146,32 +146,31 @@ array!["228517621981785468369663538305998424621845824654552006112396193307208970
 
 /// TODO
 pub fn poseidon_params() -> PoseidonParameters<Fr> {
-  let arks = FR["ark"]
-    .members()
-    .map(|ark| {
-      ark
+    let arks = FR["ark"]
         .members()
-        .map(|v| Fr::from_str(v.as_str().unwrap()).unwrap())
-        .collect::<Vec<_>>()
-    })
-    .collect::<Vec<_>>();
-  let mds = FR["mds"]
-    .members()
-    .map(|m| {
-      m.members()
-        .map(|v| Fr::from_str(v.as_str().unwrap()).unwrap())
-        .collect::<Vec<_>>()
-    })
-    .collect::<Vec<_>>();
-  PoseidonParameters::new(
-    FR["full_rounds"].as_u32().unwrap(),
-    FR["partial_rounds"].as_u32().unwrap(),
-    FR["alpha"].as_u64().unwrap(),
-    mds,
-    arks,
-  )
+        .map(|ark| {
+            ark.members()
+                .map(|v| Fr::from_str(v.as_str().unwrap()).unwrap())
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+    let mds = FR["mds"]
+        .members()
+        .map(|m| {
+            m.members()
+                .map(|v| Fr::from_str(v.as_str().unwrap()).unwrap())
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+    PoseidonParameters::new(
+        FR["full_rounds"].as_u32().unwrap(),
+        FR["partial_rounds"].as_u32().unwrap(),
+        FR["alpha"].as_u64().unwrap(),
+        mds,
+        arks,
+    )
 }
 
 lazy_static! {
-  pub static ref POSEIDON_PARAMETERS_FR_377: PoseidonParameters<Fr> = poseidon_params();
+    pub static ref POSEIDON_PARAMETERS_FR_377: PoseidonParameters<Fr> = poseidon_params();
 }

@@ -19,62 +19,62 @@ pub type Fr = ark_bls12_377::Fr;
 pub struct CompressedGroup(pub Vec<u8>);
 
 lazy_static! {
-  pub static ref GROUP_BASEPOINT: GroupElement = GroupElement::prime_subgroup_generator();
+    pub static ref GROUP_BASEPOINT: GroupElement = GroupElement::prime_subgroup_generator();
 }
 
 pub trait CompressGroupElement {
-  fn compress(&self) -> CompressedGroup;
+    fn compress(&self) -> CompressedGroup;
 }
 
 pub trait DecompressGroupElement {
-  fn decompress(encoded: &CompressedGroup) -> Option<GroupElement>;
+    fn decompress(encoded: &CompressedGroup) -> Option<GroupElement>;
 }
 
 pub trait UnpackGroupElement {
-  fn unpack(&self) -> Result<GroupElement, ProofVerifyError>;
+    fn unpack(&self) -> Result<GroupElement, ProofVerifyError>;
 }
 
 impl CompressGroupElement for GroupElement {
-  fn compress(&self) -> CompressedGroup {
-    let mut point_encoding = Vec::new();
-    self.serialize(&mut point_encoding).unwrap();
-    CompressedGroup(point_encoding)
-  }
+    fn compress(&self) -> CompressedGroup {
+        let mut point_encoding = Vec::new();
+        self.serialize(&mut point_encoding).unwrap();
+        CompressedGroup(point_encoding)
+    }
 }
 
 impl DecompressGroupElement for GroupElement {
-  fn decompress(encoded: &CompressedGroup) -> Option<Self> {
-    let res = GroupElement::deserialize(&*encoded.0);
-    if let Ok(r) = res {
-      Some(r)
-    } else {
-      println!("{:?}", res);
-      None
+    fn decompress(encoded: &CompressedGroup) -> Option<Self> {
+        let res = GroupElement::deserialize(&*encoded.0);
+        if let Ok(r) = res {
+            Some(r)
+        } else {
+            println!("{:?}", res);
+            None
+        }
     }
-  }
 }
 
 impl UnpackGroupElement for CompressedGroup {
-  fn unpack(&self) -> Result<GroupElement, ProofVerifyError> {
-    let encoded = self.0.clone();
-    GroupElement::decompress(self).ok_or(ProofVerifyError::DecompressionError(encoded))
-  }
+    fn unpack(&self) -> Result<GroupElement, ProofVerifyError> {
+        let encoded = self.0.clone();
+        GroupElement::decompress(self).ok_or(ProofVerifyError::DecompressionError(encoded))
+    }
 }
 
 pub trait VartimeMultiscalarMul {
-  fn vartime_multiscalar_mul(scalars: &[Scalar], points: &[GroupElement]) -> GroupElement;
+    fn vartime_multiscalar_mul(scalars: &[Scalar], points: &[GroupElement]) -> GroupElement;
 }
 
 impl VartimeMultiscalarMul for GroupElement {
-  fn vartime_multiscalar_mul(scalars: &[Scalar], points: &[GroupElement]) -> GroupElement {
-    let repr_scalars = scalars
-      .iter()
-      .map(|S| S.borrow().into_repr())
-      .collect::<Vec<<Scalar as PrimeField>::BigInt>>();
-    let aff_points = points
-      .iter()
-      .map(|P| P.borrow().into_affine())
-      .collect::<Vec<GroupElementAffine>>();
-    VariableBaseMSM::multi_scalar_mul(aff_points.as_slice(), repr_scalars.as_slice())
-  }
+    fn vartime_multiscalar_mul(scalars: &[Scalar], points: &[GroupElement]) -> GroupElement {
+        let repr_scalars = scalars
+            .iter()
+            .map(|S| S.borrow().into_repr())
+            .collect::<Vec<<Scalar as PrimeField>::BigInt>>();
+        let aff_points = points
+            .iter()
+            .map(|P| P.borrow().into_affine())
+            .collect::<Vec<GroupElementAffine>>();
+        VariableBaseMSM::multi_scalar_mul(aff_points.as_slice(), repr_scalars.as_slice())
+    }
 }
